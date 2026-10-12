@@ -11,4 +11,4 @@ g++ arsfetch.cpp -o Arsfetch
 
 ## Preview
 
-![Uploading image.png…]()
+<img width="362" height="555" alt="image" src="https://github.com/user-attachments/assets/1513ae62-abea-4a0a-ae1e-1a38e4ab454f" />
