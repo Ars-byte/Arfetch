@@ -1,12 +1,12 @@
-# Arsfetch
+# Arfetch
 
 My fetch in cpp.
 
 ## Build
 
 ```
-g++ arsfetch.cpp -o Arsfetch
-./Arsfetch
+g++ arfetch.cpp -o Arfetch
+./Arfetch
 ```
 
 ## Preview
