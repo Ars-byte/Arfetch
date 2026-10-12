@@ -50,31 +50,18 @@ string getGpuInfo() {
 }
 
 
-pair<string, string> getDistroInfo() {
+string getDistroInfo() {
     ifstream file("/etc/os-release");
-    string line, name = "Linux", id = "";
+    string line, name = "Linux";
     if (file.is_open()) {
         while (getline(file, line)) {
             if (line.find("PRETTY_NAME=") == 0) {
                 name = line.substr(13);
                 name.erase(std::remove(name.begin(), name.end(), '\"'), name.end());
             }
-            if (line.find("ID=") == 0 && id == "") {
-                id = line.substr(3);
-                id.erase(std::remove(id.begin(), id.end(), '\"'), id.end());
-            }
         }
     }
-
-    string icon = "󰌽";
-    if (id == "fedora") icon = "󰣛";
-    else if (id == "arch") icon = "󰣇";
-    else if (id == "steamos") icon = "";
-    else if (id == "ubuntu") icon = "󰕈";
-    else if (id == "debian") icon = "󰂄";
-    else if (id == "linuxmint") icon = "󰣭";
-    
-    return {icon, name};
+    return name;
 }
 
 
@@ -155,28 +142,28 @@ int main() {
     char host[256];
     gethostname(host, sizeof(host));
     string user = getenv("USER") ? getenv("USER") : "user";
-    auto [icon, distro] = getDistroInfo();
+    string distro = getDistroInfo();
 
     const auto now = chrono::system_clock::now();
     const time_t now_time = chrono::system_clock::to_time_t(now);
     tm* local_tm = localtime(&now_time);
 
     
-    cout << "  " << MAGENTA << "󰮯 " << RESET << BOLD << user << RESET << "@" << BOLD << host << RESET << endl;
+    cout << "  " << MAGENTA << BOLD << user << RESET << "@" << BOLD << host << RESET << endl;
     cout << "  " << MAGENTA << "--------------------------" << RESET << endl;
 
-    cout << YELLOW  << "  " << icon << " OS       : " << RESET << distro << endl;
-    cout << YELLOW  << "  󰌢 Kernel   : " << RESET << sys.release << endl;
-    cout << GREEN   << "  󱑂 Uptime   : " << RESET << getUptime() << endl;
-    cout << GREEN   << "  󰃭 Date     : " << RESET << put_time(local_tm, "%Y-%m-%d %H:%M") << endl;
+    cout << YELLOW  << "  OS       : " << RESET << distro << endl;
+    cout << YELLOW  << "  Kernel   : " << RESET << sys.release << endl;
+    cout << GREEN   << "  Uptime   : " << RESET << getUptime() << endl;
+    cout << GREEN   << "  Date     : " << RESET << put_time(local_tm, "%Y-%m-%d %H:%M") << endl;
     
     auto [ram_total, ram_usage] = getMemoryInfo();
-    cout << MAGENTA << "  󰍛 Memory   : " << RESET << fixed << setprecision(1) << ram_usage << "% (" << setprecision(2) << ram_total << " GiB)" << endl;
+    cout << MAGENTA << "  Memory   : " << RESET << fixed << setprecision(1) << ram_usage << "% (" << setprecision(2) << ram_total << " GiB)" << endl;
     
-    cout << BLUE    << "  󰻠 CPU      : " << RESET << getCpuInfo() << endl;
-    cout << BLUE    << "  󰢮 GPU      : " << RESET << getGpuInfo() << endl;
-    cout << RED     << "  󰁹 Batery   : " << RESET << getBattery() << endl;
-    cout << BLUE    << "  󰈺 Shell    : " << RESET << (getenv("SHELL") ? getenv("SHELL") : "sh") << endl;
+    cout << BLUE    << "  CPU      : " << RESET << getCpuInfo() << endl;
+    cout << BLUE    << "  GPU      : " << RESET << getGpuInfo() << endl;
+    cout << RED     << "  Battery  : " << RESET << getBattery() << endl;
+    cout << BLUE    << "  Shell    : " << RESET << (getenv("SHELL") ? getenv("SHELL") : "sh") << endl;
 
     
     cout << "\n  ";
