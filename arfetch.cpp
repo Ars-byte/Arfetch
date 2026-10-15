@@ -12,6 +12,7 @@
 #include <sys/sysinfo.h>
 #include <unistd.h>
 #include <pwd.h>
+#include <cstdio>
 
 namespace fs = std::filesystem;
 using namespace std;
@@ -118,6 +119,35 @@ pair<double, double> getMemoryInfo() {
     return {totalGB, usage};
 }
 
+string runCmd(const string& cmd) {
+    string result;
+    FILE* pipe = popen(cmd.c_str(), "r");
+    if (!pipe) return "";
+    char buf[256];
+    while (fgets(buf, sizeof(buf), pipe)) result += buf;
+    pclose(pipe);
+    return result;
+}
+
+string getPackages() {
+    struct { const char* bin; const char* cmd; } managers[] = {
+        {"/usr/bin/xbps-query", "xbps-query -l | wc -l"},
+        {"/usr/bin/dpkg-query", "dpkg-query -f '.\n' -W | wc -l"},
+        {"/usr/bin/pacman",     "pacman -Qq | wc -l"},
+        {"/usr/bin/rpm",        "rpm -qa | wc -l"},
+        {"/usr/bin/qlist",      "qlist -I | wc -l"},
+    };
+    for (const auto& m : managers) {
+        if (fs::exists(m.bin)) {
+            string out = runCmd(m.cmd);
+            out.erase(std::remove(out.begin(), out.end(), '\n'), out.end());
+            out.erase(std::remove(out.begin(), out.end(), ' '), out.end());
+            if (!out.empty()) return out + " (pkgs)";
+        }
+    }
+    return "N/A";
+}
+
 string getBattery() {
     string path = "/sys/class/power_supply/BAT0/";
     if (!fs::exists(path)) path = "/sys/class/power_supply/BAT1/";
@@ -156,6 +186,7 @@ int main() {
     cout << YELLOW  << "  Kernel   : " << RESET << sys.release << endl;
     cout << GREEN   << "  Uptime   : " << RESET << getUptime() << endl;
     cout << GREEN   << "  Date     : " << RESET << put_time(local_tm, "%Y-%m-%d %H:%M") << endl;
+    cout << CYAN    << "  Packages : " << RESET << getPackages() << endl;
     
     auto [ram_total, ram_usage] = getMemoryInfo();
     cout << MAGENTA << "  Memory   : " << RESET << fixed << setprecision(1) << ram_usage << "% (" << setprecision(2) << ram_total << " GiB)" << endl;
