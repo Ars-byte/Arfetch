@@ -11,4 +11,4 @@ g++ arfetch.cpp -o Arfetch
 
 ## Preview
 
-<img width="367" height="531" alt="image" src="https://github.com/user-attachments/assets/ab947ec5-dd5f-4d05-8bc2-6c49cd85fca0" />
+<img width="485" height="269" alt="image" src="https://github.com/user-attachments/assets/537d6b44-9dca-453d-a926-4c5e9d20a6a6" />
