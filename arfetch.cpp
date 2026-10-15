@@ -66,22 +66,23 @@ string getDistroInfo() {
 }
 
 
-void portada() {
-    cout << CYAN << R"(
-  /\___/\
-  )     (
- =\     /=
-   )   (
-  /     \
-  )     (
- /       \
- \       /
-  \__ __/
-    ))
-   //
-  ((
-   \)
-)" << RESET << endl;
+vector<string> getLogo() {
+    return {
+        "",
+        "  /\\___/\\",
+        "  )     (",
+        " =\\     /=",
+        "   )   (",
+        "  /     \\",
+        "  )     (",
+        " /       \\",
+        " \\       /",
+        "  \\__ __/",
+        "    ))",
+        "   //",
+        "  ((",
+        "   \\)",
+    };
 }
 
 string getUptime() {
@@ -164,9 +165,6 @@ string getBattery() {
 
 
 int main() {
-    portada();
-
-    
     struct utsname sys;
     uname(&sys);
     char host[256];
@@ -178,28 +176,49 @@ int main() {
     const time_t now_time = chrono::system_clock::to_time_t(now);
     tm* local_tm = localtime(&now_time);
 
-    
-    cout << "  " << MAGENTA << BOLD << user << RESET << "@" << BOLD << host << RESET << endl;
-    cout << "  " << MAGENTA << "--------------------------" << RESET << endl;
-
-    cout << YELLOW  << "  OS       : " << RESET << distro << endl;
-    cout << YELLOW  << "  Kernel   : " << RESET << sys.release << endl;
-    cout << GREEN   << "  Uptime   : " << RESET << getUptime() << endl;
-    cout << GREEN   << "  Date     : " << RESET << put_time(local_tm, "%Y-%m-%d %H:%M") << endl;
-    cout << CYAN    << "  Packages : " << RESET << getPackages() << endl;
-    
     auto [ram_total, ram_usage] = getMemoryInfo();
-    cout << MAGENTA << "  Memory   : " << RESET << fixed << setprecision(1) << ram_usage << "% (" << setprecision(2) << ram_total << " GiB)" << endl;
-    
-    cout << BLUE    << "  CPU      : " << RESET << getCpuInfo() << endl;
-    cout << BLUE    << "  GPU      : " << RESET << getGpuInfo() << endl;
-    cout << RED     << "  Battery  : " << RESET << getBattery() << endl;
-    cout << BLUE    << "  Shell    : " << RESET << (getenv("SHELL") ? getenv("SHELL") : "sh") << endl;
 
-    
-    cout << "\n  ";
-    for(int i=40; i<=47; i++) cout << "\033[" << i << "m   ";
-    cout << RESET << "\n" << endl;
+    vector<string> info;
+    info.push_back("  " + MAGENTA + BOLD + user + RESET + "@" + BOLD + host + RESET);
+    info.push_back("  " + MAGENTA + "--------------------------" + RESET);
+    info.push_back(YELLOW  + "  OS       : " + RESET + distro);
+    info.push_back(YELLOW  + "  Kernel   : " + RESET + sys.release);
+    info.push_back(GREEN   + "  Uptime   : " + RESET + getUptime());
+    {
+        ostringstream ss;
+        ss << put_time(local_tm, "%Y-%m-%d %H:%M");
+        info.push_back(GREEN + "  Date     : " + RESET + ss.str());
+    }
+    info.push_back(CYAN    + "  Packages : " + RESET + getPackages());
+    {
+        ostringstream ss;
+        ss << fixed << setprecision(1) << ram_usage << "% (" << setprecision(2) << ram_total << " GiB)";
+        info.push_back(MAGENTA + "  Memory   : " + RESET + ss.str());
+    }
+    info.push_back(BLUE    + "  CPU      : " + RESET + getCpuInfo());
+    info.push_back(BLUE    + "  GPU      : " + RESET + getGpuInfo());
+    info.push_back(RED     + "  Battery  : " + RESET + getBattery());
+    info.push_back(BLUE    + "  Shell    : " + RESET + (getenv("SHELL") ? getenv("SHELL") : "sh"));
+    info.push_back("");
+    {
+        string pal = "  ";
+        for (int i = 40; i <= 47; i++) pal += "\033[" + to_string(i) + "m   ";
+        pal += RESET;
+        info.push_back(pal);
+    }
+
+    vector<string> logo = getLogo();
+    const size_t logo_width = 12;
+
+    cout << endl;
+    for (size_t i = 0; i < max(logo.size(), info.size()); i++) {
+        string line = (i < logo.size()) ? logo[i] : "";
+        while (line.size() < logo_width) line += " ";
+        cout << CYAN << line << RESET;
+        if (i < info.size()) cout << info[i];
+        cout << endl;
+    }
+    cout << endl;
 
     return 0;
 }
