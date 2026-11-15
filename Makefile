@@ -12,4 +12,13 @@ static: $(SRC)
 	$(CXX) -std=c++17 -O3 -static $(SRC) -o $(TARGET)
 	strip $(TARGET)
 
-.PHONY: all static
+install: $(TARGET)
+	install -Dm755 $(TARGET) $(DESTDIR)/usr/local/bin/$(TARGET)
+
+uninstall:
+	rm -f $(DESTDIR)/usr/local/bin/$(TARGET)
+
+clean:
+	rm -f $(TARGET)
+
+.PHONY: all static install uninstall clean
