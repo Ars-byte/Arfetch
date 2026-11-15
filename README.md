@@ -15,9 +15,22 @@ A lightweight and fast system fetch written in modern C++ exclusively for **Linu
 
 ## Build
 
-```
+### Quick compilation
+```bash
 g++ arfetch.cpp -o Arfetch
 ./Arfetch
+```
+
+### Using Makefile
+```bash
+# Standard dynamic build
+make
+
+# Build standalone static binary (no shared library dependencies)
+make static
+
+# Optional: Install to /usr/local/bin
+sudo make install
 ```
 
 ## Preview
