@@ -25,3 +25,23 @@ jobs:
           strip --strip-all Arfetch-linux-x86_64
           chmod +x Arfetch-linux-x86_64
           cp Arfetch-linux-x86_64 Arfetch
+
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: continuous
+          name: Continuous Release (Latest Linux Static Build)
+          body: |
+            ## Automated Static Binary Release
+            - **Target:** Linux x86_64 (glibc/musl standalone)
+            - **Commit:** ${{ github.sha }}
+            - **Platform:** Linux only (Windows and macOS not supported)
+            
+            Download `Arfetch-linux-x86_64` and run directly on any Linux distribution.
+          files: |
+            Arfetch-linux-x86_64
+            Arfetch
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
