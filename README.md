@@ -2,7 +2,21 @@
 
 A lightweight and fast system fetch written in modern C++ exclusively for **Linux**.
 
+[![Static Release](https://github.com/Ars-byte/Arfetch/actions/workflows/release.yml/badge.svg)](https://github.com/Ars-byte/Arfetch/actions/workflows/release.yml)
+[![Linux Only](https://img.shields.io/badge/OS-Linux%20Only-orange.svg)](#)
+
 > **Note:** Arfetch is designed specifically for Linux environments (X11 & Wayland). Windows and macOS are not supported.
+
+## Download Prebuilt Static Binary
+
+Every time the code is updated, a standalone static Linux binary is automatically built and published:
+
+```bash
+# Download latest static binary
+curl -LO https://github.com/Ars-byte/Arfetch/releases/download/continuous/Arfetch-linux-x86_64
+chmod +x Arfetch-linux-x86_64
+./Arfetch-linux-x86_64
+```
 
 ## Features
 
