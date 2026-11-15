@@ -1,3 +1,7 @@
+#ifndef __linux__
+#error "Arfetch only supports Linux systems (Windows and macOS are not supported)."
+#endif
+
 #include <iostream>
 #include <string>
 #include <fstream>
