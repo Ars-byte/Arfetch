@@ -1,0 +1,6 @@
+name: Build and Release Static Binary
+
+on:
+  push:
+    branches:
+      - main
