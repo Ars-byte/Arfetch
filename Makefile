@@ -8,4 +8,8 @@ all: $(TARGET)
 $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
 
-.PHONY: all
+static: $(SRC)
+	$(CXX) -std=c++17 -O3 -static $(SRC) -o $(TARGET)
+	strip $(TARGET)
+
+.PHONY: all static
