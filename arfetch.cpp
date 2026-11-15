@@ -66,6 +66,64 @@ string getDistroInfo() {
 }
 
 
+string getDesktop() {
+    string desktop = "";
+    const char* xdg_current = getenv("XDG_CURRENT_DESKTOP");
+    const char* xdg_session = getenv("XDG_SESSION_DESKTOP");
+    const char* desktop_session = getenv("DESKTOP_SESSION");
+
+    string raw = "";
+    if (xdg_current && string(xdg_current).length() > 0) {
+        raw = xdg_current;
+    } else if (xdg_session && string(xdg_session).length() > 0) {
+        raw = xdg_session;
+    } else if (desktop_session && string(desktop_session).length() > 0) {
+        raw = desktop_session;
+    }
+
+    if (!raw.empty()) {
+        string lower = raw;
+        transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+
+        if (lower.find("swayfx") != string::npos) desktop = "SwayFX";
+        else if (lower.find("sway") != string::npos) desktop = "Sway";
+        else if (lower.find("hyprland") != string::npos) desktop = "Hyprland";
+        else if (lower.find("gnome") != string::npos) desktop = "GNOME";
+        else if (lower.find("kde") != string::npos || lower.find("plasma") != string::npos) desktop = "KDE Plasma";
+        else if (lower.find("xfce") != string::npos) desktop = "XFCE";
+        else if (lower.find("cinnamon") != string::npos) desktop = "Cinnamon";
+        else if (lower.find("mate") != string::npos) desktop = "MATE";
+        else if (lower.find("lxqt") != string::npos) desktop = "LXQt";
+        else if (lower.find("lxde") != string::npos) desktop = "LXDE";
+        else if (lower.find("deepin") != string::npos || lower.find("dde") != string::npos) desktop = "Deepin";
+        else if (lower.find("budgie") != string::npos) desktop = "Budgie";
+        else if (lower.find("cosmic") != string::npos) desktop = "COSMIC";
+        else if (lower.find("i3") != string::npos) desktop = "i3";
+        else if (lower.find("bspwm") != string::npos) desktop = "bspwm";
+        else if (lower.find("dwm") != string::npos) desktop = "dwm";
+        else {
+            size_t colon = raw.find(':');
+            desktop = (colon != string::npos) ? raw.substr(0, colon) : raw;
+            if (desktop != "i3" && !desktop.empty() && islower(desktop[0])) {
+                desktop[0] = toupper(desktop[0]);
+            }
+        }
+    }
+
+    if (desktop.empty()) {
+        const char* wm = getenv("WINDOWMANAGER");
+        if (wm && string(wm).length() > 0) {
+            desktop = fs::path(wm).filename().string();
+            if (!desktop.empty() && islower(desktop[0])) {
+                desktop[0] = toupper(desktop[0]);
+            }
+        }
+    }
+
+    return desktop.empty() ? "Desconocido" : desktop;
+}
+
+
 vector<string> getLogo() {
     return {
         "",
@@ -199,7 +257,7 @@ int main() {
     info.push_back(BLUE    + "  GPU      : " + RESET + getGpuInfo());
     info.push_back(RED     + "  Battery  : " + RESET + getBattery());
     info.push_back(BLUE    + "  Shell    : " + RESET + (getenv("SHELL") ? getenv("SHELL") : "sh"));
-    info.push_back("");
+    info.push_back(CYAN    + "  Desktop  : " + RESET + getDesktop());
     {
         string pal = "  ";
         for (int i = 40; i <= 47; i++) pal += "\033[" + to_string(i) + "m   ";
