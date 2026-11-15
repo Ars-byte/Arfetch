@@ -1,0 +1,17 @@
+# Build outputs and object files
+*.o
+*.a
+*.so
+*.out
+*.log
+
+# Editor and IDE configurations
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Test and temporary files
+test_*
+tmp/
