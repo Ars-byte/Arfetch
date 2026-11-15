@@ -18,3 +18,10 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y g++ build-essential binutils
+
+      - name: Compile static binary
+        run: |
+          g++ -std=c++17 -O3 -static arfetch.cpp -o Arfetch-linux-x86_64
+          strip --strip-all Arfetch-linux-x86_64
+          chmod +x Arfetch-linux-x86_64
+          cp Arfetch-linux-x86_64 Arfetch
