@@ -49,4 +49,5 @@ sudo make install
 
 ## Preview
 
-<img width="485" height="269" alt="image" src="https://github.com/user-attachments/assets/537d6b44-9dca-453d-a926-4c5e9d20a6a6" />
+<img width="451" height="321" alt="image" src="https://github.com/user-attachments/assets/1bb196dc-66d1-474c-a5b4-07adfc6555b9" />
+
