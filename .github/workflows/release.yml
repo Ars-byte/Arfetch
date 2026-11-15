@@ -4,3 +4,17 @@ on:
   push:
     branches:
       - main
+
+jobs:
+  build-static:
+    name: Build Static Binary (Linux x86_64)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build toolchain
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y g++ build-essential binutils
